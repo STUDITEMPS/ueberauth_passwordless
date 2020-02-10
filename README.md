@@ -5,7 +5,7 @@ A full documentation can be found in the [Strategy](https://github.com/STUDITEMP
 
 ## Installation
 1. Add `:ueberauth_passwordless` to dependencies in `mix.exs`
-```
+```elixir
   def deps do
     [
       {:ueberauth_passwordless, "~> 0.1},
@@ -14,7 +14,7 @@ A full documentation can be found in the [Strategy](https://github.com/STUDITEMP
 ```
 
 2. Create a Mailer Module, which sends the emails with the magic links:
-```
+```elixir
 defmodule MyApp.MyMailer do
   @behaviour Ueberauth.Strategy.Passwordless.Mailer
 
@@ -25,7 +25,7 @@ end
 ```
 
 3. Add Ueberauth Passwordless to your Ueberauth configuration:
-```
+```elixir
 config :ueberauth, Ueberauth,
   providers: [
     passwordless: {Ueberauth.Strategy.Passwordless, []}
@@ -33,7 +33,7 @@ config :ueberauth, Ueberauth,
 ```
 
 4. Set a `token_secret` and `mailer` on your Passwordless configuration:
-```
+```elixir
 config :ueberauth, Ueberauth.Strategy.Passwordless,
   token_secret: System.get_env("PASSWORDLESS_TOKEN_SECRET"),
   mailer: MyApp.MyMailer
@@ -43,7 +43,7 @@ config :ueberauth, Ueberauth.Strategy.Passwordless,
 ```
 
 5. If you haven't already, create a Controller that handles the callbacks:
-```
+```elixir
 defmodule MyApp.AuthController do
   use MyApp.Web, :controller
 
@@ -61,7 +61,7 @@ end
 ```
 
 6. If you haven't already, set up the routes for authentication
-```
+```elixir
 scrope "/auth" do
   pipe_through :browser
   
@@ -77,7 +77,7 @@ Depending on your routes, you can call the passwordless strategy with e.g.:
 ```
 
 Or, from a Phoenix Form:
-```
+```elixir
 <%= form_for @conn, Routes.auth_path(@conn, :request, "passwordless"), [method: get], fn f -> %>
   <%= text_input f, :email %>
   <%= submit "Submit" %>
@@ -90,7 +90,7 @@ You can optionally pass a `redirect_url` to which the conn will be redirected af
 ```
 
 Or, from a Phoenix Form:
-```
+```elixir
 <%= form_for @conn, Routes.auth_path(@conn, :request, "passwordless"), [method: get], fn f -> %>
   <%= hidden_input f, :redirect_url, value: "/my-redirect-path"%>
   <%= text_input f, :email %>

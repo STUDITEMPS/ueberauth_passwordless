@@ -11,6 +11,7 @@ defmodule UeberauthPasswordless.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),
+      docs: docs(),
       name: "Ueberauth Passwordless",
       source_url: "https://github.com/studitemps/ueberauth_passwordless"
     ]
@@ -30,7 +31,8 @@ defmodule UeberauthPasswordless.MixProject do
   defp deps do
     [
       {:ueberauth, "~> 0.6"},
-      {:ex_crypto, "~> 0.10.0"}
+      {:ex_crypto, "~> 0.10.0"},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end
 
@@ -39,5 +41,9 @@ defmodule UeberauthPasswordless.MixProject do
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/studitemps/ueberauth_passwordless"}
     ]
+  end
+
+  defp docs do
+    [extras: ["README.md"]]
   end
 end
