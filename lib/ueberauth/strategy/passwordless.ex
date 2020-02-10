@@ -26,7 +26,7 @@ defmodule Ueberauth.Strategy.Passwordless do
         redirect_url: "/login-link-sent"
 
 
-  If you haven't already, create a pipeline and seput routes for your callback handler
+  If you haven't already, create a pipeline and setup routes for your callback handler
 
       pipeline :auth do
         Ueberauth.plug "/auth"
@@ -35,6 +35,7 @@ defmodule Ueberauth.Strategy.Passwordless do
       scrope "/auth" do
         pipe_through [:browser, :auth]
 
+        get "/:provider", AuthController, :request
         get "/:provider/callback", AuthController, :callback
       end
 
