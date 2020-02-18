@@ -8,7 +8,7 @@ A full documentation can be found in the [Strategy](https://github.com/STUDITEMP
 ```elixir
   def deps do
     [
-      {:ueberauth_passwordless, "~> 0.1},
+      {:ueberauth_passwordless, "~> 0.1"},
     ]
   end
 ```
