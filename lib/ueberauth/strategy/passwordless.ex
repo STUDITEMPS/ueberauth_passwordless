@@ -79,8 +79,8 @@ defmodule Ueberauth.Strategy.Passwordless do
   alias Ueberauth.Auth.{Extra, Info}
 
   @defaults [
-    # Default TTL is 15 Minutes.
-    ttl: 15 * 60,
+    # Default TTL is 60 Minutes.
+    ttl: 60 * 60,
     redirect_url: "/"
   ]
 
