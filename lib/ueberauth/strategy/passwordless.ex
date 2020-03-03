@@ -174,7 +174,7 @@ defmodule Ueberauth.Strategy.Passwordless do
     "#{redirect_url}?email=#{email}"
   end
 
-  defp config(key), do: get_config() |> Keyword.fetch!(key)
+  def config(key), do: get_config() |> Keyword.fetch!(key)
 
   defp get_config() do
     config = Application.get_env(:ueberauth, __MODULE__, [])
