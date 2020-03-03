@@ -3,43 +3,54 @@ defmodule UeberauthPasswordless.StoreTest do
 
   alias Ueberauth.Strategy.Passwordless.Store
 
-  describe "starting the Store" do
-    test "with the default name is successful" do
-      {:ok, _pid} = GenServer.start_link(Store, [])
-      assert GenServer.whereis(Store)
+  test "with the default name is successful" do
+    assert :ets.whereis(:passwordless_token_store)
+  end
+
+  describe "add/1" do
+    test "is successful with a new token" do
+      assert [] = :ets.lookup(:passwordless_token_store, "12345")
+
+      assert :ok = Store.add("12345")
+      :timer.sleep(5)
+
+      assert [{"12345"}] = :ets.lookup(:passwordless_token_store, "12345")
     end
 
-    test "with a custom name is successful" do
-      {:ok, _pid} = GenServer.start_link(Store, [], name: :test_module)
-      assert GenServer.whereis(:test_module)
+    test "is also successful if then token gets added again" do
+      :ets.lookup(:passwordless_token_store, "12345")
+
+      assert :ok = Store.add("12345")
+      assert :ok = Store.add("12345")
+      :timer.sleep(1)
+
+      assert [{"12345"}] = :ets.lookup(:passwordless_token_store, "12345")
     end
   end
 
-  describe "creating a new store" do
-    test "with the default name is successful" do
-      {:ok, _pid} = GenServer.start_link(Store, [])
-      assert :ets.whereis(:passwordless_token_store)
-    end
+  describe "remove/1" do
+    test "removes an existing token" do
+      Store.add("12345")
+      :timer.sleep(1)
+      assert Store.exists?("12345")
 
-    test "with a custom name is successful" do
-      {:ok, _pid} = GenServer.start_link(Store, table_name: :test_store)
-      assert :ets.whereis(:test_store)
-    end
-  end
+      Store.remove("12345")
+      :timer.sleep(1)
 
-  describe "inserting a token" do
-    test "is successful if the token does not exist yet" do
-    end
-
-    test "fails if the token exists already" do
+      refute Store.exists?("12345")
     end
   end
 
-  describe "validating a token" do
-    test "is successful if the token exists" do
+  describe "exists?/1" do
+    test "returns true if a token exists" do
+      Store.add("12345")
+      :timer.sleep(1)
+
+      assert Store.exists?("12345")
     end
 
-    test "fails if the token does not exist" do
+    test "returns false if a token does not exist" do
+      refute Store.exists?("12345")
     end
   end
 end
