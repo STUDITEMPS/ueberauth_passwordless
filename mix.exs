@@ -24,7 +24,7 @@ defmodule UeberauthPasswordless.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {Ueberauth.Strategy.Passwordless.StoreApplication, []}
+      mod: {Ueberauth.Strategy.Passwordless.Application, []}
     ]
   end
 

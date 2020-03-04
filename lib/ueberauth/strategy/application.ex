@@ -1,4 +1,4 @@
-defmodule Ueberauth.Strategy.Passwordless.StoreApplication do
+defmodule Ueberauth.Strategy.Passwordless.Application do
   use Application
 
   def start(_type, opts) do

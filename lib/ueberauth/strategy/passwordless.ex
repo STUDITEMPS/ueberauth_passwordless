@@ -80,9 +80,14 @@ defmodule Ueberauth.Strategy.Passwordless do
   alias Ueberauth.Strategy.Passwordless.Store
 
   @defaults [
-    # Default TTL is 15 Minutes.
+    # Default TTL for Tokens is 15 Minutes.
+    # After the TTL, the tokens are invalid and will be garbage collected.
     ttl: 15 * 60,
-    redirect_url: "/"
+    redirect_url: "/",
+    # Garbage collect the token :ets store every Minute
+    garbage_collection_interval: 1000 * 60,
+    store_process_name: Ueberauth.Strategy.Passwordless.Store,
+    store_table_name: :passwordless_token_store
   ]
 
   @doc """
