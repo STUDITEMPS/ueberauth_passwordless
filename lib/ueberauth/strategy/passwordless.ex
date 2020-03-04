@@ -84,6 +84,7 @@ defmodule Ueberauth.Strategy.Passwordless do
     # After the TTL, the tokens are invalid and will be garbage collected.
     ttl: 15 * 60,
     redirect_url: "/",
+    use_store: true,
     # Garbage collect the token :ets store every Minute
     garbage_collection_interval: 1000 * 60,
     store_process_name: Ueberauth.Strategy.Passwordless.Store,
@@ -166,7 +167,7 @@ defmodule Ueberauth.Strategy.Passwordless do
   def create_link(conn, email, opts \\ []) do
     {:ok, token} = ExCrypto.Token.create(email, config(:token_secret), opts)
 
-    Store.add(token)
+    if config(:use_store), do: Store.add(token)
     callback_url(conn, token: token)
   end
 
@@ -187,13 +188,17 @@ defmodule Ueberauth.Strategy.Passwordless do
     do: ExCrypto.Token.verify(token, config(:token_secret), config(:ttl))
 
   defp invalidate_token(token) do
-    case Store.exists?(token) do
-      true ->
-        Store.remove(token)
-        {:ok, token}
+    if config(:use_store) do
+      case Store.exists?(token) do
+        true ->
+          Store.remove(token)
+          {:ok, token}
 
-      false ->
-        {:error, :token_already_used}
+        false ->
+          {:error, :token_already_used}
+      end
+    else
+      {:ok, token}
     end
   end
 
