@@ -4,7 +4,7 @@ defmodule UeberauthPasswordless.MixProject do
   def project do
     [
       app: :ueberauth_passwordless,
-      version: "0.2.0",
+      version: "0.3.0",
       elixir: "~> 1.9",
       description: "Passwordless Strategy for Ueberauth using 'Magic Links'",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -23,7 +23,8 @@ defmodule UeberauthPasswordless.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger],
+      mod: {Ueberauth.Strategy.Passwordless.Application, []}
     ]
   end
 

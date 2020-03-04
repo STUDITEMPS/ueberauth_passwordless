@@ -77,11 +77,18 @@ defmodule Ueberauth.Strategy.Passwordless do
   use Ueberauth.Strategy
 
   alias Ueberauth.Auth.{Extra, Info}
+  alias Ueberauth.Strategy.Passwordless.Store
 
   @defaults [
-    # Default TTL is 60 Minutes.
-    ttl: 60 * 60,
-    redirect_url: "/"
+    # Default TTL for Tokens is 15 Minutes.
+    # After the TTL, the tokens are invalid and will be garbage collected.
+    ttl: 15 * 60,
+    redirect_url: "/",
+    use_store: true,
+    # Garbage collect the token :ets store every Minute
+    garbage_collection_interval: 1000 * 60,
+    store_process_name: Ueberauth.Strategy.Passwordless.Store,
+    store_table_name: :passwordless_token_store
   ]
 
   @doc """
@@ -106,9 +113,11 @@ defmodule Ueberauth.Strategy.Passwordless do
     Handles the callback phase of the authentication flow.
   """
   def handle_callback!(%Plug.Conn{params: %{"token" => token}} = conn) do
-    case ExCrypto.Token.verify(token, config(:token_secret), config(:ttl)) do
-      {:ok, email} -> put_private(conn, :passwordless_email, email)
-      {:error, _error} -> set_errors!(conn, [error("invalid_token", "Token was invalid")])
+    with {:ok, token} <- invalidate_token(token),
+         {:ok, email} <- extract_email(token) do
+      put_private(conn, :passwordless_email, email)
+    else
+      _error -> set_errors!(conn, [error("invalid_token", "Token was invalid")])
     end
   end
 
@@ -155,9 +164,10 @@ defmodule Ueberauth.Strategy.Passwordless do
 
   The token contains a unforgeable HMAC token that expire after a TTL (Time-to-live).
   """
-  def create_link(conn, email) do
-    {:ok, token} = ExCrypto.Token.create(email, config(:token_secret))
+  def create_link(conn, email, opts \\ []) do
+    {:ok, token} = ExCrypto.Token.create(email, config(:token_secret), opts)
 
+    if config(:use_store), do: Store.add(token)
     callback_url(conn, token: token)
   end
 
@@ -174,7 +184,24 @@ defmodule Ueberauth.Strategy.Passwordless do
     "#{redirect_url}?email=#{email}"
   end
 
-  defp config(key), do: get_config() |> Keyword.fetch!(key)
+  defp extract_email(token),
+    do: ExCrypto.Token.verify(token, config(:token_secret), config(:ttl))
+
+  defp invalidate_token(token) do
+    cond do
+      not config(:use_store) ->
+        {:ok, token}
+
+      Store.exists?(token) ->
+        Store.remove(token)
+        {:ok, token}
+
+      true ->
+        {:error, :token_already_used}
+    end
+  end
+
+  def config(key), do: get_config() |> Keyword.fetch!(key)
 
   defp get_config() do
     config = Application.get_env(:ueberauth, __MODULE__, [])
