@@ -188,17 +188,16 @@ defmodule Ueberauth.Strategy.Passwordless do
     do: ExCrypto.Token.verify(token, config(:token_secret), config(:ttl))
 
   defp invalidate_token(token) do
-    if config(:use_store) do
-      case Store.exists?(token) do
-        true ->
-          Store.remove(token)
-          {:ok, token}
+    cond do
+      not config(:use_store) ->
+        {:ok, token}
 
-        false ->
-          {:error, :token_already_used}
-      end
-    else
-      {:ok, token}
+      Store.exists?(token) ->
+        Store.remove(token)
+        {:ok, token}
+
+      true ->
+        {:error, :token_already_used}
     end
   end
 
