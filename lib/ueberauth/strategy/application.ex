@@ -1,9 +1,13 @@
 defmodule Ueberauth.Strategy.Passwordless.Application do
   use Application
 
-  def start(_type, opts) do
-    Supervisor.start_link(__MODULE__, opts, name: __MODULE__)
+  alias Ueberauth.Strategy.Passwordless
 
+  def start(_type, opts) do
+    if Passwordless.config(:use_store), do: start_store(opts)
+  end
+
+  defp start_store(opts) do
     children = [
       {Ueberauth.Strategy.Passwordless.Store, opts}
     ]
