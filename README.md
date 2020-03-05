@@ -99,5 +99,5 @@ Or, from a Phoenix Form:
 ```
 
 ## TODOs:
-- [ ] Ensure that a magic link can only be used once (e.g. using an `:ets` table)
+- [x] Ensure that a magic link can only be used once (e.g. using an `:ets` table)
 - [ ] Make `ttl` an option in `handle_request!` and persist the option for when the magic link is validated
