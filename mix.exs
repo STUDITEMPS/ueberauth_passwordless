@@ -4,7 +4,7 @@ defmodule UeberauthPasswordless.MixProject do
   def project do
     [
       app: :ueberauth_passwordless,
-      version: "0.3.0",
+      version: "0.3.1",
       elixir: "~> 1.9",
       description: "Passwordless Strategy for Ueberauth using 'Magic Links'",
       elixirc_paths: elixirc_paths(Mix.env()),
