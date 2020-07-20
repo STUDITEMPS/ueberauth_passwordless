@@ -165,10 +165,14 @@ defmodule Ueberauth.Strategy.Passwordless do
   The token contains a unforgeable HMAC token that expire after a TTL (Time-to-live).
   """
   def create_link(conn, email, opts \\ []) do
-    {:ok, token} = ExCrypto.Token.create(email, config(:token_secret), opts)
+    {:ok, token} = create_token(email, opts)
 
     if config(:use_store), do: Store.add(token)
     callback_url(conn, token: token)
+  end
+
+  def create_token(email, opts \\ []) do
+    ExCrypto.Token.create(email, config(:token_secret), opts)
   end
 
   defp send_email(link, email), do: config(:mailer).send_email(link, email)
