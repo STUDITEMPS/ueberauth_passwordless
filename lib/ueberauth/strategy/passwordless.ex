@@ -32,7 +32,7 @@ defmodule Ueberauth.Strategy.Passwordless do
         Ueberauth.plug "/auth"
       end
 
-      scrope "/auth" do
+      scope "/auth" do
         pipe_through [:browser, :auth]
 
         get "/:provider", AuthController, :request

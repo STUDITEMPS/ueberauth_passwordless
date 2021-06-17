@@ -62,7 +62,7 @@ end
 
 6. If you haven't already, set up the routes for authentication
 ```elixir
-scrope "/auth" do
+scope "/auth" do
   pipe_through :browser
 
   get "/:provider", AuthController, :request
