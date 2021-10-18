@@ -74,7 +74,7 @@ defmodule Ueberauth.Strategy.Passwordless do
   Per default, Passwordless will redirect to "/" after the request phase is completed.
   """
 
-  use Ueberauth.Strategy
+  use Ueberauth.Strategy, ignores_csrf_attack: true
 
   alias Ueberauth.Auth.{Extra, Info}
   alias Ueberauth.Strategy.Passwordless.Store
