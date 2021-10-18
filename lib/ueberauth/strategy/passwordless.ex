@@ -74,7 +74,7 @@ defmodule Ueberauth.Strategy.Passwordless do
   Per default, Passwordless will redirect to "/" after the request phase is completed.
   """
 
-  use Ueberauth.Strategy, config(:ignores_csrf_attacks)
+  use Ueberauth.Strategy, config(:ignores_csrf_attack)
 
   alias Ueberauth.Auth.{Extra, Info}
   alias Ueberauth.Strategy.Passwordless.Store
@@ -89,7 +89,7 @@ defmodule Ueberauth.Strategy.Passwordless do
     garbage_collection_interval: 1000 * 60,
     store_process_name: Ueberauth.Strategy.Passwordless.Store,
     store_table_name: :passwordless_token_store,
-    ignores_csrf_attacks: true
+    ignores_csrf_attack: true
   ]
 
   @doc """
