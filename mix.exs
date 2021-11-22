@@ -31,7 +31,7 @@ defmodule UeberauthPasswordless.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ueberauth, "~> 0.6"},
+      {:ueberauth, "~> 0.7"},
       {:ex_crypto, git: "https://github.com/ntrepid8/ex_crypto.git", ref: "0915c274503f9fc6d6f5fab8c98467e7414cf8fc"},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
