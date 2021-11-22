@@ -167,8 +167,13 @@ defmodule Ueberauth.Strategy.Passwordless do
   def create_link(conn, email, opts \\ []) do
     {:ok, token} = create_token(email, opts)
 
+    params = [
+      token: token
+    ]
+    |> Ueberauth.Strategy.Helpers.with_state_param(conn)
+
     if config(:use_store), do: Store.add(token)
-    callback_url(conn, token: token)
+    callback_url(conn, params)
   end
 
   def create_token(email, opts \\ []) do
