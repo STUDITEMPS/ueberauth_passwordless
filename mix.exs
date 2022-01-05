@@ -5,7 +5,7 @@ defmodule UeberauthPasswordless.MixProject do
     [
       app: :ueberauth_passwordless,
       version: "0.3.2",
-      elixir: "~> 1.9",
+      elixir: "~> 1.13.0",
       description: "Passwordless Strategy for Ueberauth using 'Magic Links'",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -32,7 +32,7 @@ defmodule UeberauthPasswordless.MixProject do
   defp deps do
     [
       {:ueberauth, "~> 0.6"},
-      {:ex_crypto, "~> 0.10.0"},
+      {:ex_crypto, github: "ntrepid8/ex_crypto", ref: "0915c274503f9fc6d6f5fab8c98467e7414cf8fc"},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end
