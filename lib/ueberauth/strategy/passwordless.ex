@@ -184,7 +184,7 @@ defmodule Ueberauth.Strategy.Passwordless do
   end
 
   defp set_redirect_params(conn, redirect_url) do
-    email = conn.private[:passwordless_email]
+    email = conn.private[:passwordless_email] |> URI.encode_www_form()
     "#{redirect_url}?email=#{email}"
   end
 

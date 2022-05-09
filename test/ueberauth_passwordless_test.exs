@@ -25,7 +25,15 @@ defmodule UeberauthPasswordlessTest do
         conn("get", "/auth/passwordless", %{email: "foo@bar.com"})
         |> Passwordless.handle_request!()
 
-      assert get_resp_header(conn, "location") == ["/?email=foo@bar.com"]
+      assert get_resp_header(conn, "location") == ["/?email=foo%40bar.com"]
+    end
+
+    test "encodes the email url parameter" do
+      conn =
+        conn("get", "/auth/passwordless", %{email: "foo+bar@baz.com"})
+        |> Passwordless.handle_request!()
+
+      assert get_resp_header(conn, "location") == ["/?email=foo%2Bbar%40baz.com"]
     end
 
     test "redirects to a provided url" do
@@ -33,7 +41,7 @@ defmodule UeberauthPasswordlessTest do
         conn("get", "/auth/passwordless", %{email: "foo@bar.com", redirect_url: "/foo"})
         |> Passwordless.handle_request!()
 
-      assert get_resp_header(conn, "location") == ["/foo?email=foo@bar.com"]
+      assert get_resp_header(conn, "location") == ["/foo?email=foo%40bar.com"]
     end
 
     test "returns an error if no email was provided" do
